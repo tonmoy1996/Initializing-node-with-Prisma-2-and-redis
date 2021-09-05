@@ -1,0 +1,27 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model course {
+  id         Int      @id @default(autoincrement())
+  name       String   @db.VarChar(254)
+  created_at DateTime @default(now())
+  teacher_id Int
+  updated_at DateTime
+  teacher    teacher  @relation(fields: [teacher_id], references: [id])
+
+  @@index([teacher_id], name: "teacher_id")
+}
+
+model teacher {
+  id     Int      @id @default(autoincrement())
+  name   String   @db.VarChar(50)
+  email  String   @db.VarChar(50)
+  phone  String   @db.VarChar(11)
+  course course[]
+}
